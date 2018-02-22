@@ -65,6 +65,8 @@ class OrderVariableCollector implements VariableCollectorInterface {
         'label' => $order->getState()->getLabel(),
         'value' => $order->getState()->value,
       ],
+      'payment_method' => [],
+      'payment_gateway' => [],
     ];
 
     $totals = $this->orderTotalSummary->buildTotals($order);
@@ -114,6 +116,27 @@ class OrderVariableCollector implements VariableCollectorInterface {
       $variables['items'][] = $item;
     }
 
+    if ($order->hasField('payment_method')) {
+      /** @var \Drupal\commerce_payment\Entity\PaymentMethodInterface $payment_method */
+      if ($payment_method = $order->get('payment_method')->entity) {
+        $variables['payment_method'] = [
+          'label' => $payment_method->label(),
+          'id' => $payment_method->id(),
+          'created' => $payment_method->getCreatedTime(),
+          'type' => [
+            'id' => $payment_method->getType()->getPluginId(),
+            'label' => $payment_method->getType()->getLabel(),
+          ],
+        ];
+      }
+      /** @var \Drupal\commerce_payment\Entity\PaymentGatewayInterface $payment_gw */
+      if ($payment_gw = $order->get('payment_gateway')->entity) {
+        $variables['payment_gateway'] = [
+          'label' => $payment_gw->label(),
+          'id' => $payment_gw->id(),
+        ];
+      }
+    }
     foreach ($order->getAdjustments() as $adjustment) {
       $variables['adjustments'][] = $this->collectAdjustment($adjustment);
     }
