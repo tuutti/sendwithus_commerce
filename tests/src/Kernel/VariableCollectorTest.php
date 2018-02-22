@@ -227,6 +227,8 @@ class VariableCollectorTest extends CommerceKernelTestBase {
         'label' => 'Draft',
         'value' => 'draft',
       ],
+      'payment_method' => [],
+      'payment_gateway' => [],
       'totals' => [
         'subtotal' => [
           'number' => 246,
