@@ -106,3 +106,154 @@ This assumes that you are iterating through an array of order items:
 | {{ item.purchased_entity.type }} | The bundle | default |
 | {{ item.purchased_entity.price }} | The purchased entity's price. See [Price](#price) for more information | |
 
+## Replicate order receipt
+
+Create the following template (/admin/config/services/sendwithus):
+
+| Template ID | Key | Module |
+|-------------|-----|--------|
+| *your template id* | receipt  | Commerce order |
+
+```
+{% macro format_currency(value, currency_code) -%}
+   {# Replace locale with the one you wish to use (fi_FI or us for example) #} 
+   {{ swu.lib.babel.numbers.format_currency(value, currency_code|default('EUR'), locale='eu') }}
+{%- endmacro %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+
+  <body>
+<table style="margin: 15px auto 0 auto; max-width: 768px; font-family: arial,sans-serif">
+  <tbody>
+  <tr>
+    <td>
+      <table style="margin-left: auto; margin-right: auto; max-width: 768px; text-align: center;">
+        <tbody>
+        <tr>
+          <td>
+            <a data-click-track-id="3076" href="{{ site.url }}" style="color: #0e69be; text-decoration: none; font-weight: bold; margin-top: 15px;">{{ order.store.label }}</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <table style="text-align: center; min-width: 450px; margin: 5px auto 0 auto; border: 1px solid #cccccc; border-radius: 5px; padding: 40px 30px 30px 30px;">
+        <tbody>
+        <tr>
+          <td style="font-size: 30px; padding-bottom: 30px">{% trans %}Order Confirmation{% endtrans %}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold; padding-top:15px; padding-bottom: 15px; text-align: left; border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc">
+            {% set order_number = order.order_number %}
+            {% trans %}Order #{{ order_number }} details:{% endtrans %}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <table style="padding-top: 15px; padding-bottom:15px; width: 100%">
+              <tbody style="text-align: left;">
+              {% for item in order['items'] %}
+              <tr>
+                <td>
+                  {{ item.quantity }} x
+                </td>
+                <td>
+                  <span>{{ item.label }}</span>
+                  <span style="float: right;">{{ format_currency(item.total_price.number, item.total_price.currency_code) }}</span>
+                </td>
+              </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {% if order.billing %}
+            <table style="width: 100%; padding-top:15px; padding-bottom: 15px; text-align: left; border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc">
+              <tbody>
+              <tr>
+                {% if order.billing.address %}
+                  <td style="padding-top: 5px; font-weight: bold;">{% trans %}Billing Information{% endtrans %}</td>
+                {% endif %}
+              </tr>
+              <tr>
+                  <td>
+                    <p>
+                      <span>{{ order.billing.address.given_name }}</span>
+                      {% if order.billing.address.additional_name %} 
+                      <span>{{ order.billing.address.additional_name }} </span>
+                      {% endif %} 
+                      <span>{{ order.billing.address.family_name }}</span>
+                    </p>
+                    <p>{{ order.billing.address.address_line1 }}</p>
+                      {% if order.billing.address.address_line2 %}
+                    <p>{{ order.billing.address.address_line2 }}</p>
+                      {% endif %}
+                    <p>
+                      <span>{{ order.billing.address.postal_code }}</span>
+                      <span>{{ order.billing.address.locality }}</span>
+                    </p>
+                  </td>
+              </tr>
+              {% if order.payment_method or order.payment_gateway %}
+                <tr>
+                  <td style="font-weight: bold; margin-top: 10px;">{% trans %}Payment Method{% endtrans %}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {% if order.payment_method %}
+                      {{ order.payment_method.label }}
+                    {% endif %}
+                    {% if order.payment_gateway %}
+                      {{ order.payment_gateway.label }}
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endif %}
+              </tbody>
+            </table>
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p style="margin-bottom: 0;">
+              {% trans %}Subtotal:{% endtrans %} {{ format_currency(order.totals.subtotal.number, order.total.subtotal.currency_code) }}
+            </p>
+          </td>
+        </tr>
+        {% for adjustment in order.totals.adjustments %}
+        <tr>
+          <td>
+            <p style="margin-bottom: 0;">
+              {{ adjustment.label }}: {{ format_currency(adjustment.total.number, adjustment.total.currency_code) }}
+            </p>
+          </td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td>
+            <p style="font-size: 24px; padding-top: 15px; padding-bottom: 5px;">
+              {% trans %}Order Total:{% endtrans %} {{ format_currency(order.totals.total.number, order.totals.total.currency_code) }}
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              {% trans %}Thank you for your order!{% endtrans %}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  </tbody>
+</table>
+  </body>
+</html>
+
+```
