@@ -12,11 +12,11 @@ This module provides the following variable replacements:
 | Variable | Description | Examples |
 |----------|-------------|----------|
 | {{ order.id }} | The order ID | 1 |
-| {{ order.mail }} | The email address associated with the order.  | admin@example.com |
+| {{ order.mail }} | The email address associated with the order  | admin@example.com |
 | {{ order.type }} | The order type | default |
 | {{ order.customer.id }} | The customer ID | 5 |
 | {{ order.customer.name }} | The customer's account name | admin |
-| {{ order.customer.ip }} | The IP address of the order. | 127.0.0.1 |
+| {{ order.customer.ip }} | The IP address of the order | 127.0.0.1 |
 | {{ order.store.id }} | The store ID | 1 |
 | {{ order.store.label }} | Store's name | Default store |
 | {{ order.store.type }} | Store's type | online |
