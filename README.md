@@ -114,9 +114,9 @@ Create the following template (/admin/config/services/sendwithus):
 |-------------|-----|--------|
 | *your template id* | receipt  | Commerce order |
 
-```
+```twig
 {% macro format_currency(value, currency_code) -%}
-   {# Replace locale with the one you wish to use (fi_FI or us for example) #} 
+   {# Replace locale with the one you wish to use (fi_FI for example) #} 
    {{ swu.lib.babel.numbers.format_currency(value, currency_code|default('EUR'), locale='eu') }}
 {%- endmacro %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
