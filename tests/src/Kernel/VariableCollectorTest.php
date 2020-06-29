@@ -145,7 +145,7 @@ class VariableCollectorTest extends CommerceKernelTestBase {
             'number' => 123,
             'currency_code' => 'USD',
           ],
-          'is_unit_price_overridden' => '0',
+          'is_unit_price_overridden' => FALSE,
           'adjusted_unit_price' => [
             'number' => 113,
             'currency_code' => 'USD',
@@ -188,7 +188,7 @@ class VariableCollectorTest extends CommerceKernelTestBase {
             'number' => 123,
             'currency_code' => 'USD',
           ],
-          'is_unit_price_overridden' => '0',
+          'is_unit_price_overridden' => FALSE,
           'adjusted_unit_price' => [
             'number' => 116.85,
             'currency_code' => 'USD',
