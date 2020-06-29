@@ -2,6 +2,7 @@ name: 'Sendwithus Commerce Integration'
 type: module
 description: 'Integrates sendwithus with commerce'
 core: 8.x
+core_version_requirement: ^8 || ^9
 php: 7.1
 dependencies:
   - commerce:commerce_order
