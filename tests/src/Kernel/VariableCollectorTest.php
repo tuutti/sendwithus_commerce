@@ -22,6 +22,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class VariableCollectorTest extends CommerceKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static $modules = [
     'profile',
     'state_machine',
@@ -30,6 +33,7 @@ class VariableCollectorTest extends CommerceKernelTestBase {
     'commerce_order',
     'commerce_product',
     'commerce_price',
+    'commerce_number_pattern',
     'sendwithus_commerce',
   ];
 
@@ -47,6 +51,7 @@ class VariableCollectorTest extends CommerceKernelTestBase {
     $this->installConfig('path');
     $this->installConfig('commerce_order');
     $this->installConfig('commerce_product');
+    $this->installSchema('commerce_number_pattern', ['commerce_number_pattern_sequence']);
 
     $account = $this->createUser(['name' => 'test']);
 
@@ -140,7 +145,7 @@ class VariableCollectorTest extends CommerceKernelTestBase {
             'number' => 123,
             'currency_code' => 'USD',
           ],
-          'is_unit_price_overridden' => '0',
+          'is_unit_price_overridden' => FALSE,
           'adjusted_unit_price' => [
             'number' => 113,
             'currency_code' => 'USD',
@@ -183,7 +188,7 @@ class VariableCollectorTest extends CommerceKernelTestBase {
             'number' => 123,
             'currency_code' => 'USD',
           ],
-          'is_unit_price_overridden' => '0',
+          'is_unit_price_overridden' => FALSE,
           'adjusted_unit_price' => [
             'number' => 116.85,
             'currency_code' => 'USD',
